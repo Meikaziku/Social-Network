@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,29 +14,10 @@
 
 <body class="bg-[#AFBFC0] min-h-screen lg:grid lg:grid-cols-12">
 
-    <footer class="hidden lg:flex lg:flex-col col-span-2 lg:h-full bg-[#C2D3CD]">
+    <?php include './partials/footer_pc.php'; ?>
 
-        <div class="flex flex-col gap-12 p-4 fixed ">
-            <form class=" flex justify-center" action="">
-                <label class="hidden" for="rechercheAmis"></label>
-                <input class="rounded-full bg-white font-[Roboto] px-2 py-1 w-35 xl:w-45 2xl:w-60" type="text" placeholder="Chercher un ami" id="rechercheAmis">
-            </form>
-
-            <div class="flex flex-col gap-8 font-[Roboto] ">
-                <div class="bg-white rounded-full h-8 lg:flex gap-3 items-center px-2">
-                    <img class="w-4 h-4" src="./images/icone/house.png" alt="bouton accueil">
-                    <h3>Accueil</h3>
-                </div>
-
-                <div class="bg-white rounded-full  h-8 lg:flex gap-3 items-center px-2">
-                    <img class="w-4 h-4" src="./images/icone/profil.png" alt="bouton accueil">
-                    <h3>Profil</h3>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <div class="lg:col-span-10">
+    <div class="hidden lg:block lg:col-span-2"></div>
+    <div class="lg:col-span-10 lg:h-full">
         <header class=" bg-[#C2D3CD] py-5 lg:hidden">
 
             <div class="flex w-full justify-center items-center gap-2">
@@ -48,15 +30,15 @@
 
         </header>
 
-        <main class="py-8 flex flex-col gap-4 h-screen">
+        <main class="pt-8 pb-32 flex flex-col gap-4 lg:pb-8">
 
-            <form class="flex justify-center relative">
+            <form action="./process/upload_fichier.php" method="POST" enctype="multipart/form-data" class="flex justify-center relative">
 
                 <label class="absolute left-6 md:left-8 lg:left-20 xl:left-24 2xl:left-34 top-1/2 z-10 -translate-y-1/2" for="selectionPhoto"><img class="w-6 h-6 " src="./images/icone/trombone.png" alt="icobe d'un trombonne"></label>
                 <input class=" w-6 h-6 hidden" type="file" id="selectionPhoto" name="selectionPhoto" accept="image/png, image/jpeg" />
 
                 <label class="hidden" for="envoieDePost"></label>
-                <input class="rounded-lg bg-white w-19/20 lg:w-17/20 h-10 py-8 px-12 2xl:px-24 font-[Roboto] relative drop-shadow-lg" type="text" id="envoieDePost" placeholder="A quoi penses-tu exactements">
+                <input class="rounded-lg bg-white w-19/20 lg:w-17/20 h-10 py-8 px-12 2xl:px-24 font-[Roboto] relative drop-shadow-lg" type="text" id="envoieDePost" placeholder="A quoi penses-tu exactements" required>
 
                 <button
                     type="submite"
@@ -89,7 +71,7 @@
                 </article>
             </section>
 
-             <section class="lg:flex lg:justify-center">
+            <section class="lg:flex lg:justify-center">
                 <article class="flex flex-col gap-3 justify-center lg:w-17/20 lg:bg-white rounded-lg p-5 drop-shadow-lg">
                     <div class="flex gap-2 px-2  items-center">
                         <div class="rounded-full w-8 h-8 bg-[url('../images/exemple_photo/image4.jpg')]"></div>
@@ -113,41 +95,7 @@
         </main>
 
         <!-- footer  -->
-        <footer class="bg-[#C2D3CD] fixed bottom-0 w-full lg:hidden">
-            <section class="flex justify-center gap-8 py-8 lg:hidden">
-                <nav>
-                    <img
-                        src="./images/icone/house.png"
-                        alt="icone home"
-                        class="w-8 h-8 lg:w-6 lg:h-6 lg:hidden" />
-                </nav>
-                <nav class="lg:mb-4">
-                    <img
-                        src="./images/icone/loupe.png"
-                        alt="icone loupe"
-                        class="w-8 h-8 lg:w-6 lg:h-6 lg:hidden" />
-                </nav>
-                <nav class="lg:mb-4">
-                    <img
-                        src="./images/icone/add_photo.png"
-                        alt="icone plus"
-                        class="w-8 h-8 lg:w-6 lg:h-6 lg:hidden" />
-                </nav>
-                <nav class="lg:mb-4">
-                    <img
-                        src="./images/icone/profil.png"
-                        alt="icone profil"
-                        class="w-8 h-8 lg:w-6 lg:h-6 lg:hidden" />
-                </nav>
-                <nav class="lg:mb-4">
-                    <img
-                        src="./images/icone/message.png"
-                        alt="icone message"
-                        class="w-8 h-8 lg:w-6 lg:h-6 lg:hidden" />
-                </nav>
-            </section>
-        </footer>
-
+        <?php include './partials/footer_mobile.php'; ?>
     </div>
 
 

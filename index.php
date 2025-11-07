@@ -14,27 +14,9 @@
 <body
   class="bg-[#AFBFC0] font-[Roboto] min-h-screen flex flex-col lg:grid lg:grid-cols-12 gap-3">
 
-  <footer class="hidden lg:flex lg:flex-col col-span-2 lg:h-full bg-[#C2D3CD]">
-
-    <div class="flex flex-col gap-12 p-4 fixed ">
-      <form class=" flex justify-center" action="">
-        <label class="hidden" for="rechercheAmis"></label>
-        <input class="rounded-full bg-white font-[Roboto] px-2 py-1 w-35 xl:w-45 2xl:w-60" type="text" placeholder="Chercher un ami" id="rechercheAmis">
-      </form>
-
-      <div class="flex flex-col gap-8 font-[Roboto] ">
-        <div class="bg-white rounded-full h-8 lg:flex gap-3 items-center px-2">
-          <img class="w-4 h-4" src="./images/icone/house.png" alt="bouton accueil">
-          <h3>Accueil</h3>
-        </div>
-
-        <div class="bg-white rounded-full  h-8 lg:flex gap-3 items-center px-2">
-          <img class="w-4 h-4" src="./images/icone/profil.png" alt="bouton accueil">
-          <h3>Profil</h3>
-        </div>
-      </div>
-    </div>
-  </footer>
+  <?php include './partials/footer_pc.php'; ?>
+  
+  <div class="hidden lg:block lg:col-span-2"></div>
   <div class="lg:col-span-10">
     <div class="lg:col-span-10 flex flex-col items-center w-full min-h-full">
       <div class="w-full flex justify-center">
@@ -148,40 +130,7 @@
       </main>
     </div>
 
-    <footer class="bg-[#C2D3CD] fixed bottom-0 w-full lg:hidden">
-      <section class="flex justify-center gap-8 py-8 lg:hidden">
-        <nav>
-          <img
-            src="./images/icone/house.png"
-            alt="icone home"
-            class="w-8 h-8 lg:w-6 lg:h-6 lg:hidden" />
-        </nav>
-        <nav class="lg:mb-4">
-          <img
-            src="./images/icone/loupe.png"
-            alt="icone loupe"
-            class="w-8 h-8 lg:w-6 lg:h-6 lg:hidden" />
-        </nav>
-        <nav class="lg:mb-4">
-          <img
-            src="./images/icone/add_photo.png"
-            alt="icone plus"
-            class="w-8 h-8 lg:w-6 lg:h-6 lg:hidden" />
-        </nav>
-        <nav class="lg:mb-4">
-          <img
-            src="./images/icone/profil.png"
-            alt="icone profil"
-            class="w-8 h-8 lg:w-6 lg:h-6 lg:hidden" />
-        </nav>
-        <nav class="lg:mb-4">
-          <img
-            src="./images/icone/message.png"
-            alt="icone message"
-            class="w-8 h-8 lg:w-6 lg:h-6 lg:hidden" />
-        </nav>
-      </section>
-    </footer>
+    <?php include './partials/footer_mobile.php'; ?>
   </div>
 </body>
 
