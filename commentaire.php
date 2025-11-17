@@ -1,10 +1,86 @@
-<?php 
+<?php
 
+require_once('./utils/db-connect.php');
 session_start();
 
 if (empty($_SESSION)) {
     header('Location: ./index.php');
 }
+
+// gestion dde l'id post
+if (
+    !isset(
+        $_GET['post']
+    )
+) {
+    header('Location: ./accueil.php?error=2');
+    return;
+}
+
+if (
+    empty($_GET['post'])
+
+
+) {
+    header('Location: ./accueil.php?error=3');
+    return;
+}
+
+// Input sanitization (Nettoyage d'input)
+$idPost = htmlspecialchars(trim($_GET['post']));
+
+
+// requete pour posts
+$PostsInfos =  $db->prepare('SELECT 
+    posts.id AS idPost,
+    posts.text,
+    posts.created_at,
+    posts.photo_url,
+    user.id AS idUser,
+    user.pp,
+    user.pseudo,
+    COUNT(`like`.id) AS nombreLike,
+    COUNT(`commentaires`.id) AS nombreCommentaire
+    FROM posts
+    JOIN user ON posts.user_id = user.id
+    LEFT JOIN commentaires ON commentaires.post_id = posts.id
+    LEFT JOIN `like` ON `like`.post_id = posts.id
+    WHERE posts.id = :postId
+    GROUP BY posts.id, posts.text, posts.created_at, posts.photo_url, user.id, user.pp, user.pseudo
+    ORDER BY posts.created_at DESC;');
+
+$PostsInfos->execute([
+
+    ':postId' => $idPost
+]);
+
+$postInformation = $PostsInfos->fetch(PDO::FETCH_ASSOC);
+if ($postInformation === false) {
+
+    header('Location: ./accueil.php?error=4');
+}
+
+// requete pour afficher les commentaires
+
+$commentaireInfos =  $db->prepare('SELECT 
+    commentaires.text,
+    commentaires.user_id,
+    commentaires.post_id,
+    commentaires.created_at,
+    user.pseudo,
+    user.pp
+FROM commentaires
+JOIN user ON commentaires.user_id = user.id
+WHERE commentaires.post_id = :postId
+ORDER BY commentaires.created_at ASC');
+
+$commentaireInfos->execute([
+
+    ':postId' => $idPost
+]);
+
+$commentairesInformations = $commentaireInfos->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 
@@ -37,22 +113,64 @@ if (empty($_SESSION)) {
 
             <article class="flex flex-col gap-2 lg:w-19/20 lg:bg-white lg:rounded-t-2xl p-3">
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12  rounded-full bg-[url('../images/exemple_photo/image2.jpg')] bg-center"></div>
-                    <h3 class="font-[Roboto]  ">Meikaziku</h3>
+                    <div class=><img class="w-12 h-12  rounded-full bg-center" src="<?= htmlspecialchars($postInformation['pp']) ?>" alt=""></div>
+                    
+                    <h3 class="font-[Roboto]"><?= $postInformation['pseudo'] ?></h3>
                 </div>
 
                 <div class="w-full h-80">
-                    <img src="./images/exemple_photo/image3.jpg" alt="photo exemple 2" class="object-cover w-full h-full lg:rounded-xl">
+                    <img src="<?= htmlspecialchars($postInformation['photo_url']) ?>" alt="photo exemple 2" class="object-cover w-full h-full lg:rounded-xl">
                 </div>
-                <div class="flex justify-start items-center gap-4">
-                    <div class="flex gap-2 font-[Roboto] items-center">
-                        <img src="./images/icone/like.png" alt="icone like">
-                        <p>22</p>
+
+
+                <div class="flex justify-between">
+                    <div class="flex justify-start items-center gap-4 px-2">
+
+                        <div class="flex gap-2">
+                            <button class="likeBtn" data-post-id="<?= $postInformation['idPost'] ?>">
+
+                                <?php
+                                require_once './utils/db-connect.php';
+
+                                $request = "SELECT * FROM `like` WHERE user_id = :userId AND post_id = :postId";
+
+                                try {
+                                    $stmt = $db->prepare($request);
+                                    $stmt->execute([
+                                        ':userId' => $_SESSION['user']['id'],
+                                        ':postId' => $postInformation['idPost']
+
+                                    ]);
+
+                                    $existingLike = $stmt->fetch(PDO::FETCH_ASSOC);
+                                } catch (Exception $error) {
+                                    echo "Erreur lors de la requete : " . $error->getMessage();
+                                }
+
+                                if ($existingLike) {
+                                ?>
+                                    <img src="./images/icone/like.png" alt="like icon">
+                                <?php } else { ?>
+                                    <img src="./images/icone/not-like.png" alt="not-like icon">
+                                <?php } ?>
+                            </button>
+                            <p><?php echo $postInformation['nombreLike'] ?></p>
+                        </div>
+
+
+
+                        <div class="flex gap-2">
+
+                            <a href="./commentaire.php?post=<?= $postInformation['idPost'] ?>"><img src="./images/icone/commentaire.png" alt=""></a>
+                            <!-- <button type="submit"></button> -->
+
+                            
+                        </div>
+
                     </div>
-                    <a class="flex text-end gap-2 font-[Roboto]" href="#">
-                        <img src="./images/icone/commentaire.png" alt="icone commentaire">
-                        <p>24</p>
-                    </a>
+
+
+                    <p class="text-[12px]"><?php echo $postInformation['created_at'] ?></p>
                 </div>
             </article>
 
@@ -64,73 +182,42 @@ if (empty($_SESSION)) {
                 </div>
 
                 <!-- container des commentaires avec scroll -->
-                <div class="flex-1 overflow-y-auto pb-16">
-                    <div class="flex flex-col gap-4">
-                        <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 rounded-full bg-[url('../images/exemple_photo/image2.jpg')] bg-center"></div>
-                            <div>
-                                <h3 class="font-light text-[14px]">Meikaziku</h3>
-                                <p class="">Salut, super photo</p>
+
+                <?php foreach ($commentairesInformations as $commentaireInformation) { ?>
+
+                    <div class="flex-1 overflow-y-auto pb-16">
+                        <div class="flex flex-col gap-4 ">
+                            <div class="flex items-center gap-2 ">
+                                <div><img class="w-8 h-8 rounded-full bg-center" src="<?= htmlspecialchars($commentaireInformation['pp']) ?>" alt=""></div>
+                                <div class="flex flex-col">
+                                    <div class="flex gap-110 w-full items-center">
+                                    <h3 class="font-light text-[14px]"><?= $commentaireInformation['pseudo'] ?></h3>
+                                    <p class="text-[12px]"><?= $commentaireInformation['created_at'] ?></p>
+                                    </div>
+                                    <p class=""><?= $commentaireInformation['text'] ?></p>
+                                    
+                                </div>
                             </div>
                         </div>
+                <?php } ?>
 
-                        <div class="flex items-center gap-2">
+                    <div class="sticky bottom-0 left-0 right-0 bg-white border-t px-4 py-2">
+                        <div class="flex gap-3 items-center">
                             <div class="w-8 h-8 rounded-full bg-[url('../images/exemple_photo/image2.jpg')] bg-center"></div>
-                            <div>
-                                <h3 class="font-light text-[14px]">Meikaziku</h3>
-                                <p class="">Salut, super photo</p>
-                            </div>
+
+                            <form class="flex gap-3 w-full" action="./process/sectionCommentaire.php" method="post">
+                                <label class="hidden" for="userCommentaire"></label>
+                                <input class="rounded-full border border-gray-600 font-[Roboto] text-[14px] px-4 py-0.5 w-full" type="text" placeholder="Ecrit ton commentaire" name="userCommentaire" id="userCommentaire">
+                                <input type="hidden" name="postId" value="<?= $idPost ?>">
+                                <button type="submit"><img class="w-6 h-6" src="./images/icone/envoyer.png" alt="envoyer le commentaire"></button>
+                            </form>
+
                         </div>
-
-                        <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 rounded-full bg-[url('../images/exemple_photo/image2.jpg')] bg-center"></div>
-                            <div>
-                                <h3 class="font-light text-[14px]">Meikaziku</h3>
-                                <p class="">Salut, super photo</p>
-                            </div>
-                        </div>
-
-
-                        <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 rounded-full bg-[url('../images/exemple_photo/image2.jpg')] bg-center"></div>
-                            <div>
-                                <h3 class="font-light text-[14px]">Meikaziku</h3>
-                                <p class="">Salut, super photo</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 rounded-full bg-[url('../images/exemple_photo/image2.jpg')] bg-center"></div>
-                            <div>
-                                <h3 class="font-light text-[14px]">Meikaziku</h3>
-                                <p class="">Salut, super photo</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 rounded-full bg-[url('../images/exemple_photo/image2.jpg')] bg-center"></div>
-                            <div>
-                                <h3 class="font-light text-[14px]">Meikaziku</h3>
-                                <p class="">Salut, super photo</p>
-                            </div>
-                        </div>
-
-
-
                     </div>
-                </div>
-
-
-                <div class="sticky bottom-0 left-0 right-0 bg-white border-t px-4 py-2">
-                    <div class="flex gap-3 items-center">
-                        <div class="w-8 h-8 rounded-full bg-[url('../images/exemple_photo/image2.jpg')] bg-center"></div>
-                        <form class="flex gap-3 w-full" action="">
-                            <label class="hidden" for="rechercheAmis"></label>
-                            <input class="rounded-full border border-gray-600 font-[Roboto] text-[14px] px-4 py-0.5 w-full" type="text" placeholder="Ecrit ton commentaire" id="rechercheAmis">
-                            <button type="submit"><img class="w-6 h-6" src="./images/icone/envoyer.png" alt="envoyer le commentaire"></button>
-                        </form>
                     </div>
-                </div>
+
+
+
 
             </section>
 
