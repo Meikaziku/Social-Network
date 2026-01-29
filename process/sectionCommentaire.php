@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] !== "POST") {
 
 if (
     !isset(
-        $_POST['userCommentaire'],
+        $_POST['usersCommentaire'],
         $_POST['postId'],
         
 
@@ -22,21 +22,21 @@ if (
     return;
 }
 
-$userCommentaire = htmlspecialchars(trim($_POST['userCommentaire']));
+$userCommentaire = htmlspecialchars(trim($_POST['usersCommentaire']));
 $postId = htmlspecialchars(trim($_POST['postId']));
 
 
 
 
 $request = $db->prepare('INSERT INTO commentaires ( commentaires.user_id, commentaires.post_Id, commentaires.text, commentaires.created_at)
-        VALUES (:id, :postId, :userCommentaire, :createdAt)
+        VALUES (:id, :postId, :usersCommentaire, :createdAt)
         ');
 
 try {
     $request->execute([
-        ':id' => $_SESSION['user']['id'],
+        ':id' => $_SESSION['users']['id'],
         ':postId' => $postId,
-        ':userCommentaire' => $userCommentaire,
+        ':usersCommentaire' => $userCommentaire,
         ':createdAt' => date("Y-m-d H:i:s")
 
     ]);

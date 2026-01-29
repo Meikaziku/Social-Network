@@ -60,7 +60,7 @@ $request = $db->prepare('INSERT INTO posts (posts.user_id, posts.text, posts.pho
 
 try {
     $request->execute([
-        ':id' => $_SESSION['user']['id'],
+        ':id' => $_SESSION['users']['id'],
         ':photoUrl' => $photoUrl,
         ':textPost' => $_POST['TextPost'],
         ':createdAt' => date("Y-m-d H:i:s")

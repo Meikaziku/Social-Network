@@ -9,13 +9,13 @@ if (empty($_SESSION)) {
 
 $request = ('SELECT posts.photo_url, posts.created_at 
 FROM posts 
-WHERE user_id = :userId
+WHERE user_id = :usersId
 ORDER BY posts.created_at DESC;');
 
 try {
   $stmt = $db->prepare($request);
   $stmt->execute([
-    ':userId' => $_SESSION['user']['id'],
+    ':usersId' => $_SESSION['users']['id'],
 
   ]);
 
@@ -54,8 +54,8 @@ try {
       <div class="w-full flex justify-center">
         <header
           class="lg:flex lg:flex-col bg-[#FFFFFF] rounded-xl w-9/10 lg:drop-shadow-lg"
-          <?php if ($_SESSION['user']['banniere_photo'] !== '') { ?>
-          style="background-image: url('<?= htmlspecialchars($_SESSION['user']['banniere_photo']) ?>'); 
+          <?php if ($_SESSION['users']['banniere_photo'] !== '') { ?>
+          style="background-image: url('<?= htmlspecialchars($_SESSION['users']['banniere_photo']) ?>'); 
            background-size: cover; 
            background-position: center;"
           <?php } ?>>
@@ -74,12 +74,12 @@ try {
 
 
               <label for="selectionPp" class="cursor-pointer">
-                <?php if (empty($_SESSION['user']['pp'])) { ?>
+                <?php if (empty($_SESSION['users']['pp'])) { ?>
                   <img src="../images/icone/photo_profil_basique.jpg"
                     alt="Photo de profil"
                     class="w-32 h-32 rounded-full object-cover">
                 <?php } else { ?>
-                  <img src="<?= htmlspecialchars($_SESSION['user']['pp']) ?>"
+                  <img src="<?= htmlspecialchars($_SESSION['users']['pp']) ?>"
                     alt="Photo de profil utilisateur"
                     class="w-32 h-32 rounded-full object-cover">
                 <?php } ?>
@@ -94,7 +94,7 @@ try {
 
           <div class="lg:flex lg:flex-col lg:gap-6 px-20">
             <div class="text-center lg:text-start flex flex-col w-fit bg-[#F8F8F8] gap-8 px-4 rounded-xl ">
-              <h2 class="text-2xl font-bold font-[Roboto] "><?php echo $_SESSION['user']['pseudo'] ?></h2>
+              <h2 class="text-2xl font-bold font-[Roboto] "><?php echo $_SESSION['users']['pseudo'] ?></h2>
 
             </div>
 

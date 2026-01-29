@@ -27,12 +27,12 @@ $postId = htmlspecialchars(trim($data['postId']));
 
 require_once '../utils/db-connect.php';
 
-$request = "SELECT * FROM `like` WHERE user_id = :userId AND post_id = :postId";
+$request = "SELECT * FROM `like` WHERE user_id = :usersId AND post_id = :postId";
 
 try {
     $stmt = $db->prepare($request);
     $stmt->execute([
-        ':userId' => $_SESSION['user']['id'],
+        ':usersId' => $_SESSION['users']['id'],
         ':postId' => $postId
 
     ]);
@@ -44,12 +44,12 @@ try {
 
 if ($existingLike) {
 
-    $request = "DELETE FROM `like` WHERE user_id = :userId AND post_id = :postId";
+    $request = "DELETE FROM `like` WHERE user_id = :usersId AND post_id = :postId";
 
     try {
         $stmt = $db->prepare($request);
         $stmt->execute([
-            ':userId' => $_SESSION['user']['id'],
+            ':usersId' => $_SESSION['users']['id'],
             ':postId' => $postId
 
         ]);
@@ -57,12 +57,12 @@ if ($existingLike) {
         echo "Erreur lors de la requete : " . $error->getMessage();
     }
 } else {
-    $request = "INSERT INTO `like` (like.user_id, like.post_id) VALUES (:userId, :postId)";
+    $request = "INSERT INTO `like` (like.user_id, like.post_id) VALUES (:usersId, :postId)";
 
     try {
         $stmt = $db->prepare($request);
         $stmt->execute([
-            ':userId' => $_SESSION['user']['id'],
+            ':usersId' => $_SESSION['users']['id'],
             ':postId' => $postId
 
         ]);

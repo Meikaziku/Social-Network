@@ -36,17 +36,17 @@ $PostsInfos =  $db->prepare('SELECT
     posts.text,
     posts.created_at,
     posts.photo_url,
-    user.id AS idUser,
-    user.pp,
-    user.pseudo,
+    users.id AS idUser,
+    users.pp,
+    users.pseudo,
     COUNT(`like`.id) AS nombreLike,
     COUNT(`commentaires`.id) AS nombreCommentaire
     FROM posts
-    JOIN user ON posts.user_id = user.id
+    JOIN users ON posts.user_id = users.id
     LEFT JOIN commentaires ON commentaires.post_id = posts.id
     LEFT JOIN `like` ON `like`.post_id = posts.id
     WHERE posts.id = :postId
-    GROUP BY posts.id, posts.text, posts.created_at, posts.photo_url, user.id, user.pp, user.pseudo
+    GROUP BY posts.id, posts.text, posts.created_at, posts.photo_url, users.id, users.pp, users.pseudo
     ORDER BY posts.created_at DESC;');
 
 $PostsInfos->execute([
@@ -67,10 +67,10 @@ $commentaireInfos =  $db->prepare('SELECT
     commentaires.user_id,
     commentaires.post_id,
     commentaires.created_at,
-    user.pseudo,
-    user.pp
+    users.pseudo,
+    users.pp
 FROM commentaires
-JOIN user ON commentaires.user_id = user.id
+JOIN users ON commentaires.user_id = users.id
 WHERE commentaires.post_id = :postId
 ORDER BY commentaires.created_at ASC');
 
@@ -133,12 +133,12 @@ $commentairesInformations = $commentaireInfos->fetchAll(PDO::FETCH_ASSOC);
                                 <?php
                                 require_once './utils/db-connect.php';
 
-                                $request = "SELECT * FROM `like` WHERE user_id = :userId AND post_id = :postId";
+                                $request = "SELECT * FROM `like` WHERE user_id = :usersId AND post_id = :postId";
 
                                 try {
                                     $stmt = $db->prepare($request);
                                     $stmt->execute([
-                                        ':userId' => $_SESSION['user']['id'],
+                                        ':usersId' => $_SESSION['users']['id'],
                                         ':postId' => $postInformation['idPost']
 
                                     ]);

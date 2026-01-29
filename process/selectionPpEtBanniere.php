@@ -11,7 +11,7 @@ if (isset($_FILES['selectionBanniere']) && $_FILES['selectionBanniere']['name'] 
     $error = $_FILES['selectionBanniere']['error'];
     move_uploaded_file($tmpName, '../upload/' . $name);
 
-    $request = $db->prepare('UPDATE user SET 
+    $request = $db->prepare('UPDATE users SET 
         banniere_photo = :selectionBanniere
         WHERE id = :id');
 
@@ -21,12 +21,11 @@ if (isset($_FILES['selectionBanniere']) && $_FILES['selectionBanniere']['name'] 
         
         
         $request->execute([
-            ':id' => $_SESSION['user']['id'],
+            ':id' => $_SESSION['users']['id'],
             ':selectionBanniere' => $cheminFichier
         ]);
 
-        $_SESSION['user']['banniere_photo'] = $cheminFichier;
-
+        $_SESSION['users']['banniere_photo'] = $cheminFichier;
     } catch (PDOException $e) {
        
         echo $e->getMessage();
@@ -41,7 +40,7 @@ if (isset($_FILES['selectionPp']) && $_FILES['selectionPp']['name'] !== '') {
     $error = $_FILES['selectionPp']['error'];
     move_uploaded_file($tmpName, '../upload/' . $name);
 
-    $request = $db->prepare('UPDATE user SET 
+    $request = $db->prepare('UPDATE users SET 
         pp = :selectionPp
         WHERE id = :id');
 
@@ -50,11 +49,11 @@ if (isset($_FILES['selectionPp']) && $_FILES['selectionPp']['name'] !== '') {
         $cheminFichier = "./upload/$name";
         
         $request->execute([
-            ':id' => $_SESSION['user']['id'],
+            ':id' => $_SESSION['users']['id'],
             ':selectionPp' => $cheminFichier
         ]);
 
-        $_SESSION['user']['pp'] = $cheminFichier;
+        $_SESSION['users']['pp'] = $cheminFichier;
         
     } catch (PDOException $e) {
 
