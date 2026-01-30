@@ -36,3 +36,31 @@ Chaque utilisateur dispose d’une **page de profil dédiée** avec :
 - Bannière personnalisable
 - Affichage de l’ensemble de ses publications
 - Interface claire et responsive
+
+## Installer le projet avec Tailwind CSS
+
+### 1️⃣ Une fois le projet cloné, dans le terminal tape :
+```bash
+npm install tailwindcss @tailwindcss/cli
+```
+
+### 2️⃣ Ajouter Tailwind à ton CSS
+
+Crée un fichier CSS si tu n’en as pas déjà, par exemple :
+src/input.css ou style.css
+
+Et ajoute au début du fichier :
+```bash
+@import "tailwindcss";
+```
+
+### 3️⃣ Compiler Tailwind en CSS prêt à l’emploi
+
+Dans le terminal, exécute :
+```bash
+npx tailwindcss -i ./src/input.css -o ./src/output.css --watch
+```
+⚠️ Assure-toi que le chemin est correct selon l’endroit où se trouve tes fichiers CSS.
+
+
+### Tailwind est installé !
