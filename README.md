@@ -37,30 +37,40 @@ Chaque utilisateur dispose d’une **page de profil dédiée** avec :
 - Affichage de l’ensemble de ses publications
 - Interface claire et responsive
 
-## Installer le projet avec Tailwind CSS
+## 🚀 Installation du projet Social Network
 
-### 1️⃣ Une fois le projet cloné, dans le terminal tape :
+Suivez ces étapes pour lancer le projet en local :
+
+### 1️⃣ Cloner le projet
+dans le temrinal : 
+```bash
+git clone https://github.com/Meikaziku/luxury-service.git ./
+```
+
+### 2️⃣ Installer Tailwind CSS
+dans le temrinal : 
 ```bash
 npm install tailwindcss @tailwindcss/cli
 ```
 
-### 2️⃣ Ajouter Tailwind à ton CSS
-
-Crée un fichier CSS si tu n’en as pas déjà, par exemple :
-src/input.css ou style.css
-
-Et ajoute au début du fichier :
-```bash
-@import "tailwindcss";
-```
-
 ### 3️⃣ Compiler Tailwind en CSS prêt à l’emploi
-
-Dans le terminal, exécute :
+dans le temrinal : 
 ```bash
-npx tailwindcss -i ./src/input.css -o ./src/output.css --watch
+npx tailwindcss -i ./style/style.css -o ./style/output.css --watch
 ```
-⚠️ Assure-toi que le chemin est correct selon l’endroit où se trouve tes fichiers CSS.
+
+### 4️⃣ Importer la base de données
+Ouvrer le dossier du projet, récupérer le fichier social_network.sql dans le dossier bdd à la racine. 
+Creer ensuite une base de données et importez ce fichier.
+
+### 5️⃣ Modifier le fichier /utils/db-connect.php :
+```bash
+$user = 'user';
+$password = 'password';
+$dsn = 'mysql:host=localhost;dbname=social_network';
+```
+Dans le dbname du dsn, entrer le nom de votre base de donnée creer auparavant
 
 
-### Tailwind est installé !
+
+
